@@ -95,8 +95,8 @@
             <div style="font:500 11px/1.2 'IBM Plex Mono',monospace;color:#5C6169;margin-top:3px">GIRO 2418 · {{ giroElem }} ELEMENTI</div>
           </div>
           <div style="display:flex;align-items:center;gap:6px;background:#F0EDE7;border:1px solid #DCD9D4;padding:6px 8px;border-radius:6px">
-            <div style="width:6px;height:6px;border-radius:50%;background:#0B7A5A"></div>
-            <div style="font:500 10px/1 'IBM Plex Mono',monospace;color:#16181B">GPS 3.1m</div>
+            <div style="width:7px;height:7px;border-radius:50%;background:{{ gpsColor }}"></div>
+            <div style="font:500 10px/1 'IBM Plex Mono',monospace;color:#16181B">{{ gpsAcc }}</div>
           </div>
         </div>
 
@@ -132,6 +132,22 @@
         </div>
 
         <div style="flex:1;background:#fff;border-top:1px solid #DCD9D4;padding:16px 16px 34px;display:flex;flex-direction:column;gap:14px">
+          <div style="border:1px solid #DCD9D4;border-radius:10px;overflow:hidden">
+            <div style="display:flex;align-items:center;gap:10px;padding:12px 14px;background:#F7F6F4;border-bottom:1px solid #DCD9D4">
+              <div style="width:9px;height:9px;border-radius:50%;background:{{ gpsColor }};flex:none"></div>
+              <div style="flex:1;font:600 13px/1.2 'Helvetica Neue',Helvetica,Arial,sans-serif;color:#16181B">{{ gpsStato }}</div>
+              <div style="font:500 11px/1 'IBM Plex Mono',monospace;color:#5C6169">{{ gpsAcc }} · {{ gpsKmh }}</div>
+            </div>
+            <div style="padding:12px 14px;background:#fff">
+              <div style="display:flex;justify-content:space-between;gap:10px">
+                <div style="font:500 11px/1 'IBM Plex Mono',monospace;letter-spacing:.06em;color:#5C6169">PASSATA IN CORSO</div>
+                <div style="font:600 11px/1 'IBM Plex Mono',monospace;color:#16181B">{{ fraz }}% · valida a {{ quotaMin }}%</div>
+              </div>
+              <div style="height:6px;background:#EDEAE4;border-radius:3px;overflow:hidden;margin-top:9px"><div style="height:6px;background:#E8590C;width:{{ fraz }}%"></div></div>
+              <div style="font:400 12px/1.4 'Helvetica Neue',Helvetica,Arial,sans-serif;color:#5C6169;margin-top:9px">{{ gpsDist }}</div>
+            </div>
+          </div>
+
           <button onClick="{{ toElemento }}" style="all:unset;display:block;box-sizing:border-box;width:100%;background:#F7F6F4;border:1px solid #DCD9D4;border-radius:10px;padding:14px;cursor:pointer;text-align:left" style-hover="background:#F0EDE7">
             <div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px">
               <div style="font:500 11px/1 'IBM Plex Mono',monospace;letter-spacing:.06em;color:#5C6169">ELEMENTO IN CORSO</div>
@@ -150,7 +166,7 @@
           </button>
 
           <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:#DCD9D4;border:1px solid #DCD9D4;border-radius:8px;overflow:hidden">
-            <div style="background:#fff;padding:11px 12px"><div style="font:500 11px/1 'IBM Plex Mono',monospace;letter-spacing:.06em;color:#5C6169">KM OGGI</div><div style="font:500 16px/1 'IBM Plex Mono',monospace;color:#16181B;margin-top:7px">{{ kmOggi }}</div></div>
+            <div style="background:#fff;padding:11px 12px"><div style="font:500 11px/1 'IBM Plex Mono',monospace;letter-spacing:.06em;color:#5C6169">{{ kmLabel }}</div><div style="font:500 16px/1 'IBM Plex Mono',monospace;color:#16181B;margin-top:7px">{{ kmOggi }}</div></div>
             <div style="background:#fff;padding:11px 12px"><div style="font:500 11px/1 'IBM Plex Mono',monospace;letter-spacing:.06em;color:#5C6169">CHIUSI</div><div style="font:500 16px/1 'IBM Plex Mono',monospace;color:#0B7A5A;margin-top:7px">{{ chiusiOggi }}</div></div>
             <div style="background:#fff;padding:11px 12px"><div style="font:500 11px/1 'IBM Plex Mono',monospace;letter-spacing:.06em;color:#5C6169">ANOMALIE</div><div style="font:500 16px/1 'IBM Plex Mono',monospace;color:{{ anomColor }};margin-top:7px">{{ nAnomalie }}</div></div>
           </div>
@@ -167,7 +183,10 @@
             <button onClick="{{ toggleRec }}" style="all:unset;flex:1;box-sizing:border-box;text-align:center;background:{{ recBg }};color:{{ recFg }};border:1px solid {{ recBd }};border-radius:10px;padding:16px 12px;font:600 14px/1 'Helvetica Neue',Helvetica,Arial,sans-serif;cursor:pointer">{{ recLabel }}</button>
             <button onClick="{{ openAnomalia }}" style="all:unset;width:112px;box-sizing:border-box;text-align:center;background:#fff;color:#16181B;border:1px solid #16181B;border-radius:10px;padding:16px 12px;font:600 14px/1 'Helvetica Neue',Helvetica,Arial,sans-serif;cursor:pointer" style-hover="background:#F0EDE7">Anomalia</button>
           </div>
-          <button onClick="{{ toRiepilogo }}" style="all:unset;display:block;text-align:center;width:100%;box-sizing:border-box;padding:8px;font:500 13px/1 'Helvetica Neue',Helvetica,Arial,sans-serif;color:#5C6169;cursor:pointer;text-decoration:underline">Chiudi giro e invia copertura</button>
+          <div style="display:flex;flex-direction:column;gap:4px">
+            <button onClick="{{ toggleDemo }}" style="all:unset;display:block;text-align:center;width:100%;box-sizing:border-box;padding:8px;font:500 13px/1 'Helvetica Neue',Helvetica,Arial,sans-serif;color:#5C6169;cursor:pointer;text-decoration:underline">{{ demoLabel }}</button>
+            <button onClick="{{ toRiepilogo }}" style="all:unset;display:block;text-align:center;width:100%;box-sizing:border-box;padding:8px;font:500 13px/1 'Helvetica Neue',Helvetica,Arial,sans-serif;color:#5C6169;cursor:pointer;text-decoration:underline">Chiudi giro e invia copertura</button>
+          </div>
         </div>
       </div>
     </sc-if>
@@ -252,8 +271,8 @@
           <div style="font:500 11px/1 'IBM Plex Mono',monospace;letter-spacing:.06em;color:#5C6169;margin:22px 0 9px">DESCRIZIONE</div>
           <textarea value="{{ note }}" onChange="{{ setNote }}" placeholder="Estensione, profondità, provvedimenti immediati…" rows="4" style="width:100%;box-sizing:border-box;background:#fff;border:1px solid #DCD9D4;border-radius:8px;padding:13px;font:400 15px/1.45 'Helvetica Neue',Helvetica,Arial,sans-serif;color:#16181B;resize:none;outline:none"></textarea>
           <div style="display:flex;gap:8px;margin-top:14px;padding:13px;background:#F0EDE7;border:1px solid #DCD9D4;border-radius:8px">
-            <div style="flex:1"><div style="font:500 11px/1 'IBM Plex Mono',monospace;letter-spacing:.06em;color:#5C6169">POSIZIONE ACQUISITA</div><div style="font:500 13px/1 'IBM Plex Mono',monospace;color:#16181B;margin-top:6px">{{ corrCoord }}</div></div>
-            <div style="font:500 10px/1 'IBM Plex Mono',monospace;color:#0B7A5A;align-self:flex-end">±3.1 m</div>
+            <div style="flex:1"><div style="font:500 11px/1 'IBM Plex Mono',monospace;letter-spacing:.06em;color:#5C6169">POSIZIONE ACQUISITA</div><div style="font:500 13px/1.3 'IBM Plex Mono',monospace;color:{{ fixColor }};margin-top:6px">{{ fixCoord }}</div></div>
+            <div style="font:500 10px/1 'IBM Plex Mono',monospace;color:{{ gpsColor }};align-self:flex-end">{{ gpsAcc }}</div>
           </div>
           <button onClick="{{ salvaAnomalia }}" style="all:unset;display:block;text-align:center;box-sizing:border-box;width:100%;margin-top:18px;background:{{ salvaBg }};color:#fff;border-radius:10px;padding:17px;font:600 15px/1 'Helvetica Neue',Helvetica,Arial,sans-serif;cursor:pointer">{{ salvaLabel }}</button>
           <div style="font:400 12px/1.45 'Helvetica Neue',Helvetica,Arial,sans-serif;color:#5C6169;text-align:center;margin-top:10px">Salvata in locale, inviata alla chiusura del giro</div>
@@ -327,7 +346,7 @@
 </div></div>
 
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:500,&quot;height&quot;:1040}}">
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:500,&quot;height&quot;:1040},&quot;tolleranzaM&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:25,&quot;min&quot;:10,&quot;max&quot;:50,&quot;step&quot;:5,&quot;unit&quot;:&quot;m&quot;,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Regole di validazione&quot;},&quot;quotaMin&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:80,&quot;min&quot;:50,&quot;max&quot;:100,&quot;step&quot;:5,&quot;unit&quot;:&quot;%&quot;,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Regole di validazione&quot;}}">
 const TIPI = ['Buca', 'Dissesto', 'Segnaletica', 'Barriera', 'Scarico ostruito', 'Altro'];
 const GRAV = ['Bassa', 'Media', 'Alta'];
 const CHK = ['Video acquisito senza interruzioni', 'Velocità entro 40 km/h', 'Corsia corretta', 'Visibilità adeguata'];
@@ -340,7 +359,8 @@ const LIV = {
 
 class Component extends DCLogic {
   state = {
-    screen: 'rete', ready: false, rec: false, tick: 0,
+    screen: 'rete', ready: false, rec: false, demo: false, tick: 0,
+    gpsAcc: null, gpsKmh: null, gpsPos: null, gpsErr: '', match: null, frazione: 0,
     cov: {}, idx: 0, kmOggi: 0, chiusiOggi: [], primiOggi: 0, pctIniziale: 0,
     chk: [true, true, false, false], toast: '',
     tipo: 'Buca', grav: 'Media', nFoto: 2, note: '', salvata: false,
@@ -385,12 +405,29 @@ const xs = [], ys = [];
       this.kmTot = {}; this.nElem = {};
       for (const [k, L] of Object.entries(g.layers)) { this.kmTot[k] = L.km; this.nElem[k] = L.n; }
 
-      // stato iniziale del piano: rilievi già eseguiti
+      // il piano parte vuoto: nessun elemento rilevato
       const cov = {};
+      for (const f of this.feats) cov[f.id] = 0;
+      this.bins = {}; this.cum = {};
       for (const f of this.feats) {
-        const h = (f.f === undefined ? 0 : 0) + hash(f.id);
-        if (f.req === 2) cov[f.id] = h < 26 ? 2 : h < 52 ? 1 : 0;
-        else cov[f.id] = h < (f.key === 'secondo' ? 34 : 27) ? 1 : 0;
+        const c = [0];
+        for (let i = 1; i < f.pts.length; i++) c.push(c[i - 1] + Math.hypot(f.pts[i][0] - f.pts[i - 1][0], f.pts[i][1] - f.pts[i - 1][1]));
+        this.cum[f.id] = c;
+        this.bins[f.id] = new Uint8Array(Math.max(1, Math.round(f.m / 40)));
+      }
+      this.grid = {}; this.cell = 250;
+      for (const f of this.feats) {
+        for (let i = 1; i < f.pts.length; i++) {
+          const a = f.pts[i - 1], b = f.pts[i];
+          const L = Math.hypot(b[0] - a[0], b[1] - a[1]);
+          const n = Math.max(1, Math.ceil(L / 100));
+          for (let k = 0; k <= n; k++) {
+            const t = k / n, gx = Math.floor((a[0] + (b[0] - a[0]) * t) / this.cell), gy = Math.floor((a[1] + (b[1] - a[1]) * t) / this.cell);
+            const key = gx + '_' + gy;
+            const set = this.grid[key] || (this.grid[key] = new Set());
+            set.add(f.id);
+          }
+        }
       }
       // giro assegnato: la strada di 1º livello con più elementi + la secondaria attorno
       const perStrada = {};
@@ -403,14 +440,16 @@ const xs = [], ys = [];
         .sort((a, b) => Math.hypot(a.mid[0] - c[0], a.mid[1] - c[1]) - Math.hypot(b.mid[0] - c[0], b.mid[1] - c[1]))
         .slice(0, 14);
       this.giroNome = nome; this.route = main.concat(vicine);
-      for (const f of this.route) cov[f.id] = Math.min(cov[f.id], f.req - 1);
-      this.setState({ ready: true, cov, pctIniziale: this.pct(cov) });
+      this.setState({ ready: true, cov, pctIniziale: 0 });
     });
     this.timer = setInterval(() => {
-      if (this.state.rec && this.state.ready) this.avanza();
+      if (this.state.demo && this.state.ready) this.avanza();
     }, 1500);
   }
-  componentWillUnmount() { clearInterval(this.timer); clearTimeout(this.tt); }
+  componentWillUnmount() {
+    clearInterval(this.timer); clearTimeout(this.tt);
+    if (this.watch != null) navigator.geolocation.clearWatch(this.watch);
+  }
 
   pct(cov) {
     let done = 0, tot = 0;
@@ -428,7 +467,7 @@ const xs = [], ys = [];
       return {
         cov,
         idx: avanti ? (s.idx + 1) % this.route.length : s.idx,
-        kmOggi: s.kmOggi + f.m / 1000,
+        kmOggi: s.kmOggi + Math.min(f.m, 1500) / 1000 * 0.25,
         primiOggi: prima === 0 ? s.primiOggi + 1 : s.primiOggi,
         chiusiOggi: chiuso ? s.chiusiOggi.concat([{ nome: f.strada + ' · ' + f.cod, m: f.m }]) : s.chiusiOggi,
         toast: chiuso ? 'Elemento chiuso · ' + f.cod + ' · ' + f.strada : prima === 0 ? 'Primo passaggio registrato · manca il secondo' : '',
@@ -437,17 +476,117 @@ const xs = [], ys = [];
     clearTimeout(this.tt);
     this.tt = setTimeout(() => this.setState({ toast: '' }), 2200);
   }
+  // WGS84 -> UTM 32N (metri), lo stesso sistema del grafo
+  proj(lon, lat) {
+    const a = 6378137, f = 1 / 298.257223563, e2 = 2 * f - f * f, k0 = 0.9996;
+    const r = Math.PI / 180, φ = lat * r, λ = lon * r, λ0 = 9 * r;
+    const N = a / Math.sqrt(1 - e2 * Math.sin(φ) ** 2);
+    const T = Math.tan(φ) ** 2, C = e2 / (1 - e2) * Math.cos(φ) ** 2;
+    const A = (λ - λ0) * Math.cos(φ);
+    const e4 = e2 * e2, e6 = e4 * e2;
+    const M = a * ((1 - e2 / 4 - 3 * e4 / 64 - 5 * e6 / 256) * φ
+      - (3 * e2 / 8 + 3 * e4 / 32 + 45 * e6 / 1024) * Math.sin(2 * φ)
+      + (15 * e4 / 256 + 45 * e6 / 1024) * Math.sin(4 * φ)
+      - (35 * e6 / 3072) * Math.sin(6 * φ));
+    const x = k0 * N * (A + (1 - T + C) * A ** 3 / 6 + (5 - 18 * T + T * T + 72 * C - 58 * e2 / (1 - e2)) * A ** 5 / 120) + 500000;
+    const y = k0 * (M + N * Math.tan(φ) * (A * A / 2 + (5 - T + 9 * C + 4 * C * C) * A ** 4 / 24
+      + (61 - 58 * T + T * T + 600 * C - 330 * e2 / (1 - e2)) * A ** 6 / 720));
+    return [x, y];
+  }
+  // aggancia un punto al segmento più vicino: {id, dist, s}
+  matchAt(x, y) {
+    const gx = Math.floor(x / this.cell), gy = Math.floor(y / this.cell);
+    const ids = new Set();
+    for (let i = -1; i <= 1; i++) for (let j = -1; j <= 1; j++) {
+      const set = this.grid[(gx + i) + '_' + (gy + j)];
+      if (set) for (const id of set) ids.add(id);
+    }
+    let best = null;
+    for (const id of ids) {
+      const f = this.byId[id], cum = this.cum[id];
+      for (let i = 1; i < f.pts.length; i++) {
+        const a = f.pts[i - 1], b = f.pts[i];
+        const dx = b[0] - a[0], dy = b[1] - a[1], L2 = dx * dx + dy * dy;
+        let t = L2 ? ((x - a[0]) * dx + (y - a[1]) * dy) / L2 : 0;
+        t = Math.max(0, Math.min(1, t));
+        const d = Math.hypot(x - (a[0] + dx * t), y - (a[1] + dy * t));
+        if (!best || d < best.dist) best = { id, dist: d, s: cum[i - 1] + t * Math.sqrt(L2) };
+      }
+    }
+    return best;
+  }
+  onFix(p) {
+    if (!this.state.ready) return;
+    const [x, y] = this.proj(p.coords.longitude, p.coords.latitude);
+    const px = x - this.g.origin[0], py = y - this.g.origin[1];
+    const acc = p.coords.accuracy || 0;
+    const kmh = p.coords.speed != null && p.coords.speed >= 0 ? p.coords.speed * 3.6 : null;
+    const tol = this.props.tolleranzaM ?? 25;
+    const quota = (this.props.quotaMin ?? 80) / 100;
+    const m = this.matchAt(px, py);
+    let dKm = 0;
+    if (this.last) dKm = Math.hypot(px - this.last[0], py - this.last[1]) / 1000;
+    if (dKm > 0.2) dKm = 0; // salto di segnale
+    this.last = [px, py];
+
+    const agganciato = m && m.dist <= tol + Math.min(acc, 20);
+    let frazione = 0, chiuso = null, nuovo = null;
+    let cov = this.state.cov;
+    if (agganciato) {
+      const f = this.byId[m.id], bins = this.bins[m.id];
+      const bi = Math.min(bins.length - 1, Math.floor(m.s / f.m * bins.length));
+      bins[bi] = 1;
+      let n = 0; for (let i = 0; i < bins.length; i++) n += bins[i];
+      frazione = n / bins.length;
+      if (frazione >= quota) {
+        const prima = cov[f.id] || 0;
+        if (prima < f.req) {
+          cov = Object.assign({}, cov, { [f.id]: prima + 1 });
+          this.bins[f.id] = new Uint8Array(bins.length);
+          if (prima + 1 >= f.req) chiuso = f; else nuovo = f;
+        }
+        frazione = 0;
+      }
+    }
+    this.setState(s => ({
+      cov, gpsAcc: acc, gpsKmh: kmh, gpsPos: [px, py], gpsAt: Date.now(),
+      match: agganciato ? { id: m.id, dist: m.dist } : null,
+      frazione, kmOggi: s.kmOggi + dKm,
+      primiOggi: nuovo ? s.primiOggi + 1 : s.primiOggi,
+      chiusiOggi: chiuso ? s.chiusiOggi.concat([{ nome: chiuso.strada + ' · ' + chiuso.cod, m: chiuso.m }]) : s.chiusiOggi,
+      toast: chiuso ? 'Elemento chiuso · ' + chiuso.cod + ' · ' + chiuso.strada
+        : nuovo ? 'Primo passaggio validato · manca il secondo' : s.toast,
+    }));
+    if (chiuso || nuovo) { clearTimeout(this.tt); this.tt = setTimeout(() => this.setState({ toast: '' }), 2600); }
+  }
+  gps(on) {
+    if (!on) {
+      if (this.watch != null) navigator.geolocation.clearWatch(this.watch);
+      this.watch = null; this.last = null;
+      this.setState({ rec: false, gpsErr: '' });
+      return;
+    }
+    if (!navigator.geolocation) { this.setState({ gpsErr: 'Questo dispositivo non fornisce la posizione' }); return; }
+    this.setState({ rec: true, gpsErr: '' });
+    this.watch = navigator.geolocation.watchPosition(
+      p => this.onFix(p),
+      e => this.setState({ gpsErr: e.code === 1 ? 'Permesso posizione negato' : 'Segnale GPS non disponibile' }),
+      { enableHighAccuracy: true, maximumAge: 1000, timeout: 15000 }
+    );
+  }
   box(pad, cx, cy, w, h) { return [cx - w / 2, cy - h / 2, w, h].map(n => Math.round(n)).join(' '); }
   go(screen) { return () => this.setState({ screen, salvata: false, toast: '' }); }
 
   renderVals() {
     const s = this.state;
     if (!s.ready) return { rail: SCREENS.map(([id, label]) => ({ label, go: this.go(id), bg: 'transparent', fg: '#5C6169', bd: '#C9C4BB' })), isRete: true };
-    const f = this.route[s.idx % this.route.length];
+    const f = (s.match && this.byId[s.match.id]) || this.route[s.idx % this.route.length];
     const pass = s.cov[f.id] || 0;
+    const tol = this.props.tolleranzaM ?? 25;
+    const quota = this.props.quotaMin ?? 80;
     const kmTotAll = Object.values(this.kmTot).reduce((a, b) => a + b, 0);
     const pctTot = this.pct(s.cov);
-    const mid = f.mid, W = 2000, H = W * 352 / 402;
+    const mid = s.gpsPos || f.mid, W = 2000, H = W * 352 / 402;
 
     const parzPrimo = [], donePrimo = [], doneMinori = [];
     for (const x of this.feats) {
@@ -511,7 +650,11 @@ const xs = [], ys = [];
       corrStato: pass + '/' + f.req, corrColor: pass >= f.req ? '#0B7A5A' : '#E8590C',
       corrProssimo: (pass + 1) + ' di ' + f.req,
       corrIdStrada: f.id.split(':')[1], corrUltimo: pass ? 'oggi' : 'mai',
-      corrCoord: (this.g.origin[0] + f.mid[0]).toFixed(0) + ' E · ' + (this.g.origin[1] + f.mid[1]).toFixed(0) + ' N',
+      fixCoord: s.gpsPos
+        ? (this.g.origin[0] + s.gpsPos[0]).toFixed(0) + ' E · ' + (this.g.origin[1] + s.gpsPos[1]).toFixed(0) + ' N (UTM 32N)'
+        : 'posizione non disponibile · GPS ' + (s.rec ? 'in ricerca' : 'non attivo'),
+      fixColor: s.gpsPos ? '#16181B' : '#B45309',
+      kmLabel: s.demo ? 'KM SIMULATI' : 'KM OGGI',
 
       kmOggi: s.kmOggi.toFixed(2), chiusiOggi: String(s.chiusiOggi.length),
       primiOggi: String(s.primiOggi), chiuseOggi: s.chiusiOggi.slice(-6).reverse(),
@@ -519,8 +662,17 @@ const xs = [], ys = [];
       nAnomalie: String(s.anomalie.length), anomColor: s.anomalie.length ? '#B45309' : '#16181B',
       toast: s.toast,
       registra: () => { this.avanza(); this.setState({ screen: 'giro' }); },
-      toggleRec: () => this.setState(x => ({ rec: !x.rec })),
-      recLabel: s.rec ? 'Pausa rilievo' : 'Avvia rilievo',
+      toggleRec: () => this.gps(!s.rec),
+      toggleDemo: () => this.setState(x => ({ demo: !x.demo })),
+      demoLabel: s.demo ? 'Ferma simulazione' : 'Simula percorso (prova senza GPS)',
+      gpsStato: s.gpsErr ? s.gpsErr : !s.rec ? 'GPS non attivo' : s.gpsAcc == null ? 'Ricerca satelliti…' : 'Posizione attiva',
+      gpsColor: s.gpsErr ? '#B45309' : s.rec && s.gpsAcc != null ? '#0B7A5A' : '#5C6169',
+      gpsAcc: s.gpsAcc == null ? '—' : '±' + s.gpsAcc.toFixed(0) + ' m',
+      gpsKmh: s.gpsKmh == null ? '—' : s.gpsKmh.toFixed(0) + ' km/h',
+      gpsAgganciato: !!s.match,
+      gpsDist: s.match ? s.match.dist.toFixed(0) + ' m dall\u2019asse' : 'nessun segmento entro ' + tol + ' m',
+      fraz: (s.frazione * 100).toFixed(0), quotaMin: String(quota), tolleranza: String(tol),
+      recLabel: s.rec ? 'Pausa rilievo GPS' : 'Avvia rilievo GPS',
       recBg: s.rec ? '#fff' : '#E8590C', recFg: s.rec ? '#16181B' : '#fff', recBd: s.rec ? '#16181B' : '#E8590C',
 
       checklist: CHK.map((label, i) => ({
