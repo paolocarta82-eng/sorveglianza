@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Copertura"><meta name="theme-color" content="#F7F6F4"><link rel="manifest" href="./manifest.webmanifest"><link rel="apple-touch-icon" href="./icona.png"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap"><style>body{margin:0;background:#E9E6E1;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased}a{color:#E8590C}a:hover{color:#C24A08}textarea,input,button{font-family:inherit}</style><script>if("serviceWorker" in navigator)addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}));</script><script src="./rete-grafo.js"></script></helmet>
+<template id="__bundler_thumbnail"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#16181B"></rect><g fill="none" stroke-linecap="round"><path d="M28 74 L44 52 L40 34 L58 26" stroke="#0B7A5A" stroke-width="7"></path><path d="M58 26 L72 30" stroke="#E8590C" stroke-width="7"></path><path d="M30 44 L52 60 L70 58" stroke="#5C6169" stroke-width="4"></path></g></svg></template>
+<div style="width:100%;max-width:560px;margin:0 auto;background:#F7F6F4;min-height:100vh;padding-bottom:86px;box-sizing:border-box">
+
+    <sc-if value="{{ isRete }}" hint-placeholder-val="{{ true }}">
+      <div style="min-height:calc(100vh - 86px);background:#F7F6F4;padding:calc(env(safe-area-inset-top) + 16px) 0 40px;box-sizing:border-box">
+        <div style="padding:14px 20px 16px">
+          <div style="font:500 11px/1 'IBM Plex Mono',monospace;letter-spacing:.06em;color:#5C6169">PIANO DI RILIEVO 2026 · SORVEGLIANZA TECNICA</div>
+          <div style="display:flex;align-items:flex-end;gap:10px;margin-top:10px">
+            <div style="font:600 56px/.9 'IBM Plex Mono',monospace;letter-spacing:-.04em;color:#16181B">{{ pctTot }}</div>
+            <div style="font:500 20px/1 'IBM Plex Mono',monospace;color:#8A8F97;padding-bottom:5px">%</div>
+            <div style="flex:1;text-align:right;font:400 12px/1.35 'Helvetica Neue',Helvetica,Arial,sans-serif;color:#5C6169;padding-bottom:4px">rete coperta<br>{{ kmFatti }} di {{ kmTot }} km</div>
+          </div>
+        </div>
+
+        <div style="position:relative;background:#EDEAE4;border-top:1px solid #DCD9D4;border-bottom:1px solid #DCD9D4">
+          <svg viewBox="{{ boxTot }}" width="100%" height="300" style="display:block">
+            <g stroke="#BDB8AE" fill="none" stroke-width="0.9" vector-effect="non-scaling-stroke" stroke-linecap="round">
+              <sc-for list="{{ baseSecondaria }}" as="p" hint-placeholder-count="0"><path d="{{ p.d }}" vector-effect="non-scaling-stroke"></path></sc-for>
+            </g>
+            <g stroke="#B9B4AC" fill="none" stroke-width="1.3" vector-effect="non-scaling-stroke" stroke-linecap="round">
+              <sc-for list="{{ baseSecondo }}" as="p" hint-placeholder-count="0"><path d="{{ p.d }}" vector-effect="non-scaling-stroke"></path></sc-for>
+            </g>
+            <g stroke="#8A8F97" fill="none" stroke-width="2.2" vector-effect="non-scaling-stroke" stroke-linecap="round">
+              <sc-for list="{{ basePrimo }}" as="p" hint-placeholder-count="0"><path d="{{ p.d }}" vector-effect="non-scaling-stroke"></path></sc-for>
+            </g>
+            <g stroke="#0B7A5A" fill="none" stroke-width="0.9" vector-effect="non-scaling-stroke" stroke-linecap="round">
+              <sc-for list="{{ doneMinori }}" as="p" hint-placeholder-count="0"><path d="{{ p.d }}" vector-effect="non-scaling-stroke"></path></sc-for>
+            </g>
+            <g stroke="#E8590C" fill="none" stroke-width="2.6" vector-effect="non-scaling-stroke" stroke-linecap="round">
+              <sc-for list="{{ parzPrimo }}" as="p" hint-placeholder-count="0"><path d="{{ p.d }}" vector-effect="non-scaling-stroke"></path></sc-for>
+            </g>
+            <g stroke="#0B7A5A" fill="none" stroke-width="2.6" vector-effect="non-scaling-stroke" stroke-linecap="round">
+              <sc-for list="{{ donePrimo }}" as="p" hint-placeholder-count="0"><path d="{{ p.d }}" vector-effect="non-scaling-stroke"></path></sc-for>
+            </g>
+          </svg>
+          <div style="position:absolute;left:12px;bottom:12px;background:#F7F6F4;border:1px solid #DCD9D4;border-radius:8px;padding:9px 11px;display:flex;flex-direction:column;gap:7px">
+            <div style="display:flex;align-items:center;gap:8px"><div style="width:18px;height:3px;background:#0B7A5A"></div><div style="font:500 10px/1 'IBM Plex Mono',monospace;color:#16181B">COMPLETO</div></div>
+            <div style="display:flex;align-items:center;gap:8px"><div style="width:18px;height:3px;background:#E8590C"></div><div style="font:500 10px/1 'IBM Plex Mono',monospace;color:#16181B">1 PASSAGGIO SU 2</div></div>
+            <div style="display:flex;align-items:center;gap:8px"><div style="width:18px;height:3px;background:#8A8F97"></div><div style="font:500 10px/1 'IBM Plex Mono',monospace;color:#16181B">DA RILEVARE</div></div>
+          </div>
+        </div>
+
+        <div style="padding:18px 16px 0;display:flex;flex-direction:column;gap:10px">
+          <sc-for list="{{ livelli }}" as="l" hint-placeholder-count="3">
+            <div style="background:#fff;border:1px solid #DCD9D4;border-radius:10px;padding:14px">
+              <div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px">
+                <div style="font:600 14px/1.2 'Helvetica Neue',Helvetica,Arial,sans-serif;color:#16181B">{{ l.nome }}</div>
+                <div style="font:500 11px/1 'IBM Plex Mono',monospace;color:#5C6169">{{ l.req }}</div>
+              </div>
+              <div style="height:6px;background:#EDEAE4;border-radius:3px;overflow:hidden;margin-top:11px"><div style="height:6px;background:{{ l.tint }};width:{{ l.pct }}%"></div></div>
+              <div style="display:flex;justify-content:space-between;margin-top:9px">
+                <div style="font:500 11px/1 'IBM Plex Mono',monospace;color:#5C6169">{{ l.km }} / {{ l.kmTot }} km · {{ l.elem }}</div>
+                <div style="font:600 11px/1 'IBM Plex Mono',monospace;color:#16181B">{{ l.pct }}%</div>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+
+        <div style="padding:20px 16px 0">
+          <div style="font:500 11px/1 'IBM Plex Mono',monospace;letter-spacing:.06em;color:#5C6169;margin-bottom:9px">STRADE QUASI CHIUSE · MANCA POCO</div>
+          <div style="background:#fff;border:1px solid #DCD9D4;border-radius:10px;overflow:hidden">
+            <sc-for list="{{ quasi }}" as="q" hint-placeholder-count="4">
+              <div style="display:flex;align-items:center;gap:12px;padding:13px 14px;border-bottom:1px solid #EDEAE4">
+                <div style="flex:1;min-width:0"><div style="font:600 13px/1.25 'Helvetica Neue',Helvetica,Arial,sans-serif;color:#16181B">{{ q.nome }}</div><div style="font:500 10px/1 'IBM Plex Mono',monospace;color:#5C6169;margin-top:5px">MANCANO {{ q.resto }}</div></div>
+                <div style="width:56px;height:5px;background:#EDEAE4;border-radius:3px;overflow:hidden;flex:none"><div style="height:5px;background:#E8590C;width:{{ q.pct }}%"></div></div>
+                <div style="font:600 11px/1 'IBM Plex Mono',monospace;color:#16181B;width:30px;text-align:right">{{ q.pct }}%</div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+
+        <div style="padding:20px 16px 0">
+          <button onClick="{{ toGiro }}" style="all:unset;display:block;text-align:center;box-sizing:border-box;width:100%;background:#E8590C;color:#fff;border-radius:10px;padding:18px;font:600 15px/1 'Helvetica Neue',Helvetica,Arial,sans-serif;cursor:pointer">Riprendi il giro · {{ giroNome }}</button>
+          <div style="font:400 12px/1.45 'Helvetica Neue',Helvetica,Arial,sans-serif;color:#5C6169;text-align:center;margin-top:10px">{{ giroResto }} elementi ancora aperti in questo giro</div>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isGiro }}">
+      <div style="min-height:calc(100vh - 86px);background:#F7F6F4;display:flex;flex-direction:column">
+        <div style="padding:calc(env(safe-area-inset-top) + 16px) 16px 12px;background:#fff;border-bottom:1px solid #DCD9D4;display:flex;align-items:center;gap:12px">
+          <button onClick="{{ toRete }}" style="all:unset;font:400 22px/1 'Helvetica Neue',Helvetica,Arial,sans-serif;color:#E8590C;cursor:pointer;padding:4px 6px">‹</button>
+          <div style="flex:1;min-width:0">
+            <div style="font:600 15px/1.2 'Helvetica Neue',Helvetica,Arial,sans-serif;color:#16181B">{{ giroNome }}</div>
+            <div style="font:500 11px/1.2 'IBM Plex Mono',monospace;color:#5C6169;margin-top:3px">GIRO 2418 · {{ giroElem }} ELEMENTI</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;background:#F0EDE7;border:1px solid #DCD9D4;padding:6px 8px;border-radius:6px">
+            <div style="width:6px;height:6px;border-radius:50%;background:#0B7A5A"></div>
+            <div style="font:500 10px/1 'IBM Plex Mono',monospace;color:#16181B">GPS 3.1m</div>
+          </div>
+        </div>
+
+        <div style="position:relative;height:352px;background:#EDEAE4;overflow:hidden;flex:none">
+          <svg viewBox="{{ boxZoom }}" width="100%" height="352" style="display:block">
+            <g stroke="#CFCAC1" fill="none" stroke-width="2" vector-effect="non-scaling-stroke" stroke-linecap="round">
+              <sc-for list="{{ baseSecondaria }}" as="p" hint-placeholder-count="0"><path d="{{ p.d }}" vector-effect="non-scaling-stroke"></path></sc-for>
+            </g>
+            <g stroke="#B9B4AC" fill="none" stroke-width="4" vector-effect="non-scaling-stroke" stroke-linecap="round">
+              <sc-for list="{{ baseSecondo }}" as="p" hint-placeholder-count="0"><path d="{{ p.d }}" vector-effect="non-scaling-stroke"></path></sc-for>
+            </g>
+            <g stroke="#8A8F97" fill="none" stroke-width="7" vector-effect="non-scaling-stroke" stroke-linecap="round">
+              <sc-for list="{{ basePrimo }}" as="p" hint-placeholder-count="0"><path d="{{ p.d }}" vector-effect="non-scaling-stroke"></path></sc-for>
+            </g>
+            <g stroke="#0B7A5A" fill="none" stroke-width="3" vector-effect="non-scaling-stroke" stroke-linecap="round">
+              <sc-for list="{{ doneMinori }}" as="p" hint-placeholder-count="0"><path d="{{ p.d }}" vector-effect="non-scaling-stroke"></path></sc-for>
+            </g>
+            <g stroke="#E8590C" fill="none" stroke-width="7" vector-effect="non-scaling-stroke" stroke-linecap="round">
+              <sc-for list="{{ parzPrimo }}" as="p" hint-placeholder-count="0"><path d="{{ p.d }}" vector-effect="non-scaling-stroke"></path></sc-for>
+            </g>
+            <g stroke="#0B7A5A" fill="none" stroke-width="7" vector-effect="non-scaling-stroke" stroke-linecap="round">
+              <sc-for list="{{ donePrimo }}" as="p" hint-placeholder-count="0"><path d="{{ p.d }}" vector-effect="non-scaling-stroke"></path></sc-for>
+            </g>
+            <g stroke="#16181B" fill="none" stroke-width="10" vector-effect="non-scaling-stroke" stroke-linecap="round" opacity="0.9">
+              <path d="{{ correnteD }}" vector-effect="non-scaling-stroke"></path>
+            </g>
+            <circle cx="{{ posX }}" cy="{{ posY }}" r="{{ rBig }}" fill="#E8590C" opacity="0.16"></circle>
+            <circle cx="{{ posX }}" cy="{{ posY }}" r="{{ rDot }}" fill="#16181B" stroke="#fff" stroke-width="3" vector-effect="non-scaling-stroke"></circle>
+          </svg>
+          <sc-if value="{{ toast }}">
+            <div style="position:absolute;left:12px;right:12px;top:12px;background:#0B7A5A;border-radius:10px;padding:12px 14px;font:600 13px/1.3 'Helvetica Neue',Helvetica,Arial,sans-serif;color:#fff">{{ toast }}</div>
+          </sc-if>
+        </div>
+
+        <div style="flex:1;background:#fff;border-top:1px solid #DCD9D4;padding:16px 16px 34px;display:flex;flex-direction:column;gap:14px">
+          <button onClick="{{ toElemento }}" style="all:unset;display:block;box-sizing:border-box;width:100%;background:#F7F6F4;border:1px solid #DCD9D4;border-radius:10px;padding:14px;cursor:pointer;text-align:left" style-hover="background:#F0EDE7">
+            <div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px">
+              <div style="font:500 11px/1 'IBM Plex Mono',monospace;letter-spacing:.06em;color:#5C6169">ELEMENTO IN CORSO</div>
+              <div style="font:500 10px/1 'IBM Plex Mono',monospace;color:#5C6169">{{ corrLivello }}</div>
+            </div>
+            <div style="font:600 18px/1.2 'Helvetica Neue',Helvetica,Arial,sans-serif;color:#16181B;margin-top:8px">{{ corrStrada }}</div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:9px">
+              <div style="font:500 12px/1 'IBM Plex Mono',monospace;color:#5C6169">{{ corrCodice }} · {{ corrM }} m</div>
+              <div style="display:flex;gap:5px;align-items:center">
+                <sc-for list="{{ corrPassi }}" as="p" hint-placeholder-count="2">
+                  <div style="width:22px;height:8px;border-radius:2px;background:{{ p.bg }};border:1px solid {{ p.bd }}"></div>
+                </sc-for>
+                <div style="font:600 11px/1 'IBM Plex Mono',monospace;color:#16181B;margin-left:4px">{{ corrStato }}</div>
+              </div>
+            </div>
+          </button>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:#DCD9D4;border:1px solid #DCD9D4;border-radius:8px;overflow:hidden">
+            <div style="background:#fff;padding:11px 12px"><div style="font:500 11px/1 'IBM Plex Mono',monospace;letter-spacing:.06em;color:#5C6169">KM OGGI</div><div style="font:500 16px/1 'IBM Plex Mono',monospace;color:#16181B;margin-top:7px">{{ kmOggi }}</div></div>
+            <div style="background:#fff;padding:11px 12px"><div style="font:500 11px/1 'IBM Plex Mono',monospace;letter-spacing:.06em;color:#5C6169">CHIUSI</div><div style="font:500 16px/1 'IBM Plex Mono',monospace;color:#0B7A5A;margin-top:7px">{{ chiusiOggi }}</div></div>
+            <div style="background:#fff;padding:11px 12px"><div style="font:500 11px/1 'IBM Plex Mono',monospace;letter-spacing:.06em;color:#5C6169">ANOMALIE</div><div style="font:500 16px/1 'IBM Plex Mono',monospace;color:{{ anomColor }};margin-top:7px">{{ nAnomalie }}</div></div>
+          </div>
+
+          <div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:7px">
+              <div style="font:500 11px/1 'IBM Plex Mono',monospace;letter-spacing:.06em;color:#5C6169">AVANZAMENTO GIRO</div>
+              <div style="font:600 10px/1 'IBM Plex Mono',monospace;color:#16181B">{{ giroPct }}%</div>
+            </div>
+            <div style="height:6px;background:#EDEAE4;border-radius:3px;overflow:hidden"><div style="height:6px;background:#E8590C;width:{{ giroPct }}%"></div></div>
+          </div>
+
+          <div style="display:flex;gap:10px">
+            <button onClick="{{ toggleRec }}" style="all:unset;flex:1;box-sizing:border-box;text-align:center;background:{{ recBg }};color:{{ recFg }};border:1px solid {{ recBd }};border-radius:10px;padding:16px 12px;font:600 14px/1 'Helvetica Neue',Helvetica,Arial,sans-serif;cursor:pointer">{{ recLabel }}</button>
+            <button onClick="{{ openAnomalia }}" style="all:unset;width:112px;box-sizing:border-box;text-align:center;background:#fff;color:#16181B;border:1px solid #16181B;border-radius:10px;padding:16px 12px;font:600 14px/1 'Helvetica Neue',Helvetica,Arial,sans-serif;cursor:pointer" style-hover="background:#F0EDE7">Anomalia</button>
+          </div>
+          <button onClick="{{ toRiepilogo }}" style="all:unset;display:block;text-align:center;width:100%;box-sizing:border-box;padding:8px;font:500 13px/1 'Helvetica Neue',Helvetica,Arial,sans-serif;color:#5C6169;cursor:pointer;text-decoration:underline">Chiudi giro e invia copertura</button>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isElemento }}">
+      <div style="min-height:calc(100vh - 86px);background:#F7F6F4;padding:0 0 40px">
+        <div style="padding:calc(env(safe-area-inset-top) + 16px) 16px 12px;background:#fff;border-bottom:1px solid #DCD9D4;display:flex;align-items:center;gap:12px">
+          <button onClick="{{ toGiro }}" style="all:unset;font:400 22px/1 'Helvetica Neue',Helvetica,Arial,sans-serif;color:#E8590C;cursor:pointer;padding:4px 6px">‹</button>
+          <div style="flex:1;min-width:0"><div style="font:600 15px/1.2 'Helvetica Neue',Helvetica,Arial,sans-serif;color:#16181B">{{ corrStrada }}</div><div style="font:500 11px/1.2 'IBM Plex Mono',monospace;color:#5C6169;margin-top:3px">ELEMENTO {{ corrCodice }} · {{ corrLivello }}</div></div>
+        </div>
+        <div style="padding:16px">
+          <div style="background:#EDEAE4;border:1px solid #DCD9D4;border-radius:10px;overflow:hidden">
+            <svg viewBox="{{ boxElem }}" width="100%" height="170" style="display:block">
+              <g stroke="#CFCAC1" fill="none" stroke-width="2" vector-effect="non-scaling-stroke" stroke-linecap="round">
+                <sc-for list="{{ baseSecondaria }}" as="p" hint-placeholder-count="0"><path d="{{ p.d }}" vector-effect="non-scaling-stroke"></path></sc-for>
+              </g>
+              <g stroke="#B9B4AC" fill="none" stroke-width="5" vector-effect="non-scaling-stroke" stroke-linecap="round">
+                <sc-for list="{{ basePrimo }}" as="p" hint-placeholder-count="0"><path d="{{ p.d }}" vector-effect="non-scaling-stroke"></path></sc-for>
+              </g>
+              <g stroke="#E8590C" fill="none" stroke-width="9" vector-effect="non-scaling-stroke" stroke-linecap="round">
+                <path d="{{ correnteD }}" vector-effect="non-scaling-stroke"></path>
+              </g>
+            </svg>
+          </div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1px;background:#DCD9D4;border:1px solid #DCD9D4;border-radius:10px;overflow:hidden;margin-top:16px">
+            <div style="background:#fff;padding:14px"><div style="font:500 11px/1 'IBM Plex Mono',monospace;letter-spacing:.06em;color:#5C6169">LUNGHEZZA</div><div style="font:600 22px/1 'IBM Plex Mono',monospace;color:#16181B;margin-top:9px">{{ corrM }} m</div></div>
+            <div style="background:#fff;padding:14px"><div style="font:500 11px/1 'IBM Plex Mono',monospace;letter-spacing:.06em;color:#5C6169">PASSAGGI</div><div style="font:600 22px/1 'IBM Plex Mono',monospace;color:{{ corrColor }};margin-top:9px">{{ corrStato }}</div></div>
+            <div style="background:#fff;padding:14px"><div style="font:500 11px/1 'IBM Plex Mono',monospace;letter-spacing:.06em;color:#5C6169">ID STRADA</div><div style="font:500 15px/1 'IBM Plex Mono',monospace;color:#16181B;margin-top:11px">{{ corrIdStrada }}</div></div>
+            <div style="background:#fff;padding:14px"><div style="font:500 11px/1 'IBM Plex Mono',monospace;letter-spacing:.06em;color:#5C6169">ULTIMO VIDEO</div><div style="font:500 15px/1 'IBM Plex Mono',monospace;color:#16181B;margin-top:11px">{{ corrUltimo }}</div></div>
+          </div>
+
+          <div style="font:500 11px/1 'IBM Plex Mono',monospace;letter-spacing:.06em;color:#5C6169;margin:20px 0 8px">CONDIZIONI DEL PASSAGGIO</div>
+          <div style="background:#fff;border:1px solid #DCD9D4;border-radius:10px;overflow:hidden">
+            <sc-for list="{{ checklist }}" as="c" hint-placeholder-count="4">
+              <button onClick="{{ c.toggle }}" style="all:unset;display:flex;box-sizing:border-box;width:100%;align-items:center;gap:12px;padding:14px;border-bottom:1px solid #EDEAE4;cursor:pointer" style-hover="background:#F7F6F4">
+                <div style="width:22px;height:22px;border-radius:5px;border:2px solid {{ c.bd }};background:{{ c.bg }};color:#fff;font:600 12px/1 'Helvetica Neue',Helvetica,Arial,sans-serif;display:flex;align-items:center;justify-content:center;flex:none">{{ c.tick }}</div>
+                <div style="flex:1;text-align:left;font:400 15px/1.35 'Helvetica Neue',Helvetica,Arial,sans-serif;color:#16181B">{{ c.label }}</div>
+              </button>
+            </sc-for>
+          </div>
+
+          <div style="display:flex;flex-direction:column;gap:10px;margin-top:18px">
+            <button onClick="{{ registra }}" style="all:unset;display:block;text-align:center;box-sizing:border-box;width:100%;background:#16181B;color:#fff;border-radius:10px;padding:17px;font:600 15px/1 'Helvetica Neue',Helvetica,Arial,sans-serif;cursor:pointer">Convalida passaggio {{ corrProssimo }}</button>
+            <button onClick="{{ openAnomalia }}" style="all:unset;display:block;text-align:center;box-sizing:border-box;width:100%;background:#fff;color:#B45309;border:1px solid #B45309;border-radius:10px;padding:17px;font:600 15px/1 'Helvetica Neue',Helvetica,Arial,sans-serif;cursor:pointer">Rileva anomalia su questo elemento</button>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isAnomalia }}">
+      <div style="min-height:calc(100vh - 86px);background:#F7F6F4;padding:0 0 40px">
+        <div style="padding:calc(env(safe-area-inset-top) + 16px) 16px 12px;background:#fff;border-bottom:1px solid #DCD9D4;display:flex;align-items:center;justify-content:space-between;gap:12px">
+          <button onClick="{{ toGiro }}" style="all:unset;font:400 15px/1 'Helvetica Neue',Helvetica,Arial,sans-serif;color:#E8590C;cursor:pointer;padding:4px 2px">Annulla</button>
+          <div style="font:600 15px/1.2 'Helvetica Neue',Helvetica,Arial,sans-serif;color:#16181B">Nuova anomalia</div>
+          <div style="font:500 11px/1 'IBM Plex Mono',monospace;color:#5C6169">{{ corrCodice }}</div>
+        </div>
+        <div style="padding:16px">
+          <div style="padding:13px;background:#F0EDE7;border:1px solid #DCD9D4;border-radius:8px;font:500 12px/1.4 'IBM Plex Mono',monospace;color:#16181B">{{ corrStrada }} · {{ corrCodice }}</div>
+          <div style="font:500 11px/1 'IBM Plex Mono',monospace;letter-spacing:.06em;color:#5C6169;margin:20px 0 9px">TIPOLOGIA</div>
+          <div style="display:flex;flex-wrap:wrap;gap:8px">
+            <sc-for list="{{ tipi }}" as="t" hint-placeholder-count="6">
+              <button onClick="{{ t.pick }}" style="all:unset;box-sizing:border-box;background:{{ t.bg }};color:{{ t.fg }};border:1px solid {{ t.bd }};border-radius:8px;padding:11px 13px;font:500 14px/1 'Helvetica Neue',Helvetica,Arial,sans-serif;cursor:pointer">{{ t.label }}</button>
+            </sc-for>
+          </div>
+          <div style="font:500 11px/1 'IBM Plex Mono',monospace;letter-spacing:.06em;color:#5C6169;margin:22px 0 9px">GRAVITÀ</div>
+          <div style="display:flex;gap:1px;background:#DCD9D4;border:1px solid #DCD9D4;border-radius:8px;overflow:hidden">
+            <sc-for list="{{ gravita }}" as="g" hint-placeholder-count="3">
+              <button onClick="{{ g.pick }}" style="all:unset;flex:1;text-align:center;background:{{ g.bg }};color:{{ g.fg }};padding:14px 8px;font:600 14px/1 'Helvetica Neue',Helvetica,Arial,sans-serif;cursor:pointer">{{ g.label }}</button>
+            </sc-for>
+          </div>
+          <div style="font:500 11px/1 'IBM Plex Mono',monospace;letter-spacing:.06em;color:#5C6169;margin:22px 0 9px">RILIEVO FOTOGRAFICO</div>
+          <div style="display:flex;gap:8px">
+            <sc-for list="{{ foto }}" as="f" hint-placeholder-count="2">
+              <div style="flex:1;aspect-ratio:3/4;background:#EDEAE4;border:1px solid #DCD9D4;border-radius:8px;display:flex;align-items:center;justify-content:center;font:500 10px/1.3 'IBM Plex Mono',monospace;color:#5C6169;text-align:center">{{ f.label }}</div>
+            </sc-for>
+            <button onClick="{{ addFoto }}" style="all:unset;flex:1;aspect-ratio:3/4;box-sizing:border-box;background:#fff;border:1px dashed #B9B4AC;border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;cursor:pointer" style-hover="border-color:#E8590C">
+              <div style="font:400 22px/1 'Helvetica Neue',Helvetica,Arial,sans-serif;color:#E8590C">＋</div>
+              <div style="font:500 10px/1 'IBM Plex Mono',monospace;color:#5C6169">SCATTA</div>
+            </button>
+          </div>
+          <div style="font:500 11px/1 'IBM Plex Mono',monospace;letter-spacing:.06em;color:#5C6169;margin:22px 0 9px">DESCRIZIONE</div>
+          <textarea value="{{ note }}" onChange="{{ setNote }}" placeholder="Estensione, profondità, provvedimenti immediati…" rows="4" style="width:100%;box-sizing:border-box;background:#fff;border:1px solid #DCD9D4;border-radius:8px;padding:13px;font:400 15px/1.45 'Helvetica Neue',Helvetica,Arial,sans-serif;color:#16181B;resize:none;outline:none"></textarea>
+          <div style="display:flex;gap:8px;margin-top:14px;padding:13px;background:#F0EDE7;border:1px solid #DCD9D4;border-radius:8px">
+            <div style="flex:1"><div style="font:500 11px/1 'IBM Plex Mono',monospace;letter-spacing:.06em;color:#5C6169">POSIZIONE ACQUISITA</div><div style="font:500 13px/1 'IBM Plex Mono',monospace;color:#16181B;margin-top:6px">{{ corrCoord }}</div></div>
+            <div style="font:500 10px/1 'IBM Plex Mono',monospace;color:#0B7A5A;align-self:flex-end">±3.1 m</div>
+          </div>
+          <button onClick="{{ salvaAnomalia }}" style="all:unset;display:block;text-align:center;box-sizing:border-box;width:100%;margin-top:18px;background:{{ salvaBg }};color:#fff;border-radius:10px;padding:17px;font:600 15px/1 'Helvetica Neue',Helvetica,Arial,sans-serif;cursor:pointer">{{ salvaLabel }}</button>
+          <div style="font:400 12px/1.45 'Helvetica Neue',Helvetica,Arial,sans-serif;color:#5C6169;text-align:center;margin-top:10px">Salvata in locale, inviata alla chiusura del giro</div>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isRiepilogo }}">
+      <div style="min-height:calc(100vh - 86px);background:#F7F6F4;padding:0 0 40px">
+        <div style="padding:calc(env(safe-area-inset-top) + 16px) 16px 12px;background:#fff;border-bottom:1px solid #DCD9D4;display:flex;align-items:center;gap:12px">
+          <button onClick="{{ toGiro }}" style="all:unset;font:400 22px/1 'Helvetica Neue',Helvetica,Arial,sans-serif;color:#E8590C;cursor:pointer;padding:4px 6px">‹</button>
+          <div style="flex:1"><div style="font:600 15px/1.2 'Helvetica Neue',Helvetica,Arial,sans-serif;color:#16181B">Chiusura giro 2418</div><div style="font:500 11px/1.2 'IBM Plex Mono',monospace;color:#5C6169;margin-top:3px">{{ giroNome }} · 8 SET 2026</div></div>
+        </div>
+        <div style="padding:16px">
+          <div style="background:#16181B;border-radius:12px;padding:18px">
+            <div style="font:500 11px/1 'IBM Plex Mono',monospace;letter-spacing:.06em;color:#D6D2CB">COPERTURA RETE DOPO QUESTO GIRO</div>
+            <div style="display:flex;align-items:flex-end;gap:8px;margin-top:10px">
+              <div style="font:600 44px/.9 'IBM Plex Mono',monospace;letter-spacing:-.03em;color:#fff">{{ pctTot }}</div>
+              <div style="font:500 16px/1 'IBM Plex Mono',monospace;color:#8A8F97;padding-bottom:4px">%</div>
+              <div style="flex:1;text-align:right;font:500 12px/1 'IBM Plex Mono',monospace;color:#0B9B72;padding-bottom:6px">+{{ deltaPct }} pt oggi</div>
+            </div>
+            <div style="height:6px;background:#3A3D42;border-radius:3px;overflow:hidden;margin-top:14px"><div style="height:6px;background:#E8590C;width:{{ pctTot }}%"></div></div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1px;background:#DCD9D4;border:1px solid #DCD9D4;border-radius:10px;overflow:hidden;margin-top:16px">
+            <div style="background:#fff;padding:15px"><div style="font:500 11px/1 'IBM Plex Mono',monospace;letter-spacing:.06em;color:#5C6169">KM PERCORSI</div><div style="font:600 26px/1 'IBM Plex Mono',monospace;color:#16181B;margin-top:9px">{{ kmOggi }}</div></div>
+            <div style="background:#fff;padding:15px"><div style="font:500 11px/1 'IBM Plex Mono',monospace;letter-spacing:.06em;color:#5C6169">ELEMENTI CHIUSI</div><div style="font:600 26px/1 'IBM Plex Mono',monospace;color:#0B7A5A;margin-top:9px">{{ chiusiOggi }}</div></div>
+            <div style="background:#fff;padding:15px"><div style="font:500 11px/1 'IBM Plex Mono',monospace;letter-spacing:.06em;color:#5C6169">PRIMI PASSAGGI</div><div style="font:600 26px/1 'IBM Plex Mono',monospace;color:#E8590C;margin-top:9px">{{ primiOggi }}</div></div>
+            <div style="background:#fff;padding:15px"><div style="font:500 11px/1 'IBM Plex Mono',monospace;letter-spacing:.06em;color:#5C6169">ANOMALIE</div><div style="font:600 26px/1 'IBM Plex Mono',monospace;color:{{ anomColor }};margin-top:9px">{{ nAnomalie }}</div></div>
+          </div>
+
+          <div style="font:500 11px/1 'IBM Plex Mono',monospace;letter-spacing:.06em;color:#5C6169;margin:22px 0 9px">STRADE CHIUSE OGGI</div>
+          <div style="background:#fff;border:1px solid #DCD9D4;border-radius:10px;overflow:hidden">
+            <sc-for list="{{ chiuseOggi }}" as="c" hint-placeholder-count="2">
+              <div style="display:flex;gap:12px;align-items:center;padding:14px;border-bottom:1px solid #EDEAE4">
+                <div style="width:22px;height:22px;border-radius:5px;background:#0B7A5A;color:#fff;font:600 12px/1 'Helvetica Neue',Helvetica,Arial,sans-serif;display:flex;align-items:center;justify-content:center;flex:none">✓</div>
+                <div style="flex:1;min-width:0;font:600 14px/1.25 'Helvetica Neue',Helvetica,Arial,sans-serif;color:#16181B">{{ c.nome }}</div>
+                <div style="font:500 11px/1 'IBM Plex Mono',monospace;color:#5C6169">{{ c.m }} m</div>
+              </div>
+            </sc-for>
+            <sc-if value="{{ noChiuse }}" hint-placeholder-val="{{ false }}">
+              <div style="padding:16px;font:400 14px/1.35 'Helvetica Neue',Helvetica,Arial,sans-serif;color:#5C6169">Nessun elemento chiuso in questo giro</div>
+            </sc-if>
+          </div>
+
+          <div style="font:500 11px/1 'IBM Plex Mono',monospace;letter-spacing:.06em;color:#5C6169;margin:22px 0 9px">ANOMALIE RILEVATE</div>
+          <div style="background:#fff;border:1px solid #DCD9D4;border-radius:10px;overflow:hidden">
+            <sc-for list="{{ anomalie }}" as="a" hint-placeholder-count="2">
+              <div style="display:flex;gap:12px;align-items:center;padding:14px;border-bottom:1px solid #EDEAE4">
+                <div style="width:34px;height:34px;border-radius:6px;background:#EDEAE4;border:1px solid #DCD9D4;flex:none"></div>
+                <div style="flex:1;min-width:0"><div style="font:600 14px/1.2 'Helvetica Neue',Helvetica,Arial,sans-serif;color:#16181B">{{ a.tipo }}</div><div style="font:500 11px/1.2 'IBM Plex Mono',monospace;color:#5C6169;margin-top:4px">{{ a.dove }} · {{ a.nFoto }} FOTO</div></div>
+                <div style="font:600 10px/1 'IBM Plex Mono',monospace;letter-spacing:.06em;color:{{ a.fg }};background:{{ a.bg }};padding:5px 7px;border-radius:4px">{{ a.gravita }}</div>
+              </div>
+            </sc-for>
+            <sc-if value="{{ noAnomalie }}" hint-placeholder-val="{{ false }}">
+              <div style="padding:16px;font:400 14px/1.35 'Helvetica Neue',Helvetica,Arial,sans-serif;color:#5C6169">Nessuna anomalia segnalata</div>
+            </sc-if>
+          </div>
+
+          <button onClick="{{ sync }}" style="all:unset;display:block;text-align:center;box-sizing:border-box;width:100%;margin-top:18px;background:{{ syncBg }};color:#fff;border-radius:10px;padding:18px;font:600 15px/1 'Helvetica Neue',Helvetica,Arial,sans-serif;cursor:pointer">{{ syncLabel }}</button>
+          <div style="font:400 12px/1.45 'Helvetica Neue',Helvetica,Arial,sans-serif;color:#5C6169;text-align:center;margin-top:10px">{{ syncHint }}</div>
+        </div>
+      </div>
+    </sc-if>
+
+  
+<div style="position:fixed;left:0;right:0;bottom:0;z-index:20;display:flex;background:#fff;border-top:1px solid #DCD9D4;padding:8px 8px calc(env(safe-area-inset-bottom) + 8px)">
+  <sc-for list="{{ rail }}" as="tab" hint-placeholder-count="5">
+    <button onClick="{{ tab.go }}" style="all:unset;flex:1;box-sizing:border-box;text-align:center;padding:12px 4px;border-radius:8px;background:{{ tab.bg }};color:{{ tab.fg }};font:600 11px/1 'IBM Plex Mono',monospace;letter-spacing:.04em;cursor:pointer">{{ tab.label }}</button>
+  </sc-for>
+</div></div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:500,&quot;height&quot;:1040}}">
+const TIPI = ['Buca', 'Dissesto', 'Segnaletica', 'Barriera', 'Scarico ostruito', 'Altro'];
+const GRAV = ['Bassa', 'Media', 'Alta'];
+const CHK = ['Video acquisito senza interruzioni', 'Velocità entro 40 km/h', 'Corsia corretta', 'Visibilità adeguata'];
+const SCREENS = [['rete', 'RETE'], ['giro', 'GIRO'], ['elemento', 'ELEMENTO'], ['anomalia', 'ANOMALIA'], ['riepilogo', 'CHIUSURA']];
+const LIV = {
+  primo: { nome: 'Assi di scorrimento · 1º livello', req: 2, tint: '#E8590C' },
+  secondo: { nome: 'Viabilità di 2º livello', req: 1, tint: '#B45309' },
+  secondaria: { nome: 'Rete secondaria', req: 1, tint: '#0B7A5A' },
+};
+
+class Component extends DCLogic {
+  state = {
+    screen: 'rete', ready: false, rec: false, tick: 0,
+    cov: {}, idx: 0, kmOggi: 0, chiusiOggi: [], primiOggi: 0, pctIniziale: 0,
+    chk: [true, true, false, false], toast: '',
+    tipo: 'Buca', grav: 'Media', nFoto: 2, note: '', salvata: false,
+    anomalie: [], syncState: 'idle',
+  };
+
+  componentDidMount() {
+    const carica = window.__RETE
+      ? Promise.resolve(window.__RETE)
+      : fetch('./rete-grafo.json').then(r => r.json());
+    carica.then(g => {
+      this.g = g;
+      const [ex, ey] = g.extent;
+      this.ex = ex; this.ey = ey;
+      const d = pts => 'M ' + pts.map(p => p[0] + ' ' + (ey - p[1])).join(' L ');
+      this.feats = [];
+      for (const [key, L] of Object.entries(g.layers)) {
+        for (const f of L.feats) {
+          this.feats.push({
+            id: key + ':' + f.f, key, req: LIV[key].req, strada: f.s || 'senza nome',
+            cod: f.e || '—', m: f.m, d: d(f.p), pts: f.p,
+            mid: f.p[Math.floor(f.p.length / 2)],
+          });
+        }
+      }
+      this.byId = {}; for (const f of this.feats) this.byId[f.id] = f;
+      this.base = { primo: [], secondo: [], secondaria: [] };
+      for (const f of this.feats) this.base[f.key].push({ d: f.d });
+const xs = [], ys = [];
+      for (const ft of this.feats) for (const p of ft.pts) { xs.push(p[0]); ys.push(ey - p[1]); }
+      xs.sort((a, b) => a - b); ys.sort((a, b) => a - b);
+      const q = (arr, t) => arr[Math.floor((arr.length - 1) * t)];
+      let x0 = q(xs, 0.01), x1 = q(xs, 0.99), y0 = q(ys, 0.01), y1 = q(ys, 0.99);
+      const ar = 402 / 300, w0 = x1 - x0, h0 = y1 - y0;
+      let w = w0, h = h0;
+      if (w / h < ar) w = h * ar; else h = w / ar;
+      const pad = w * 0.04;
+      this.fitBox = [
+        Math.round(x0 - (w - w0) / 2 - pad), Math.round(y0 - (h - h0) / 2 - pad / ar),
+        Math.round(w + pad * 2), Math.round(h + pad * 2 / ar),
+      ].join(' ');
+      this.kmTot = {}; this.nElem = {};
+      for (const [k, L] of Object.entries(g.layers)) { this.kmTot[k] = L.km; this.nElem[k] = L.n; }
+
+      // stato iniziale del piano: rilievi già eseguiti
+      const cov = {};
+      for (const f of this.feats) {
+        const h = (f.f === undefined ? 0 : 0) + hash(f.id);
+        if (f.req === 2) cov[f.id] = h < 26 ? 2 : h < 52 ? 1 : 0;
+        else cov[f.id] = h < (f.key === 'secondo' ? 34 : 27) ? 1 : 0;
+      }
+      // giro assegnato: la strada di 1º livello con più elementi + la secondaria attorno
+      const perStrada = {};
+      for (const f of this.feats) if (f.key === 'primo') (perStrada[f.strada] = perStrada[f.strada] || []).push(f);
+      const nome = Object.keys(perStrada).sort((a, b) => perStrada[b].length - perStrada[a].length)[0];
+      const main = perStrada[nome].slice().sort((a, b) => a.cod.localeCompare(b.cod));
+      const c = main[Math.floor(main.length / 2)].mid;
+      const vicine = this.feats
+        .filter(f => f.key !== 'primo' && Math.hypot(f.mid[0] - c[0], f.mid[1] - c[1]) < 900)
+        .sort((a, b) => Math.hypot(a.mid[0] - c[0], a.mid[1] - c[1]) - Math.hypot(b.mid[0] - c[0], b.mid[1] - c[1]))
+        .slice(0, 14);
+      this.giroNome = nome; this.route = main.concat(vicine);
+      for (const f of this.route) cov[f.id] = Math.min(cov[f.id], f.req - 1);
+      this.setState({ ready: true, cov, pctIniziale: this.pct(cov) });
+    });
+    this.timer = setInterval(() => {
+      if (this.state.rec && this.state.ready) this.avanza();
+    }, 1500);
+  }
+  componentWillUnmount() { clearInterval(this.timer); clearTimeout(this.tt); }
+
+  pct(cov) {
+    let done = 0, tot = 0;
+    for (const f of this.feats) { tot += f.m; done += f.m * Math.min(cov[f.id] || 0, f.req) / f.req; }
+    return (done / tot) * 100;
+  }
+  avanza() {
+    const f = this.route[this.state.idx % this.route.length];
+    this.setState(s => {
+      const cov = Object.assign({}, s.cov);
+      const prima = cov[f.id] || 0;
+      cov[f.id] = Math.min(f.req, prima + 1);
+      const chiuso = prima < f.req && cov[f.id] === f.req;
+      const avanti = cov[f.id] >= f.req;
+      return {
+        cov,
+        idx: avanti ? (s.idx + 1) % this.route.length : s.idx,
+        kmOggi: s.kmOggi + f.m / 1000,
+        primiOggi: prima === 0 ? s.primiOggi + 1 : s.primiOggi,
+        chiusiOggi: chiuso ? s.chiusiOggi.concat([{ nome: f.strada + ' · ' + f.cod, m: f.m }]) : s.chiusiOggi,
+        toast: chiuso ? 'Elemento chiuso · ' + f.cod + ' · ' + f.strada : prima === 0 ? 'Primo passaggio registrato · manca il secondo' : '',
+      };
+    });
+    clearTimeout(this.tt);
+    this.tt = setTimeout(() => this.setState({ toast: '' }), 2200);
+  }
+  box(pad, cx, cy, w, h) { return [cx - w / 2, cy - h / 2, w, h].map(n => Math.round(n)).join(' '); }
+  go(screen) { return () => this.setState({ screen, salvata: false, toast: '' }); }
+
+  renderVals() {
+    const s = this.state;
+    if (!s.ready) return { rail: SCREENS.map(([id, label]) => ({ label, go: this.go(id), bg: 'transparent', fg: '#5C6169', bd: '#C9C4BB' })), isRete: true };
+    const f = this.route[s.idx % this.route.length];
+    const pass = s.cov[f.id] || 0;
+    const kmTotAll = Object.values(this.kmTot).reduce((a, b) => a + b, 0);
+    const pctTot = this.pct(s.cov);
+    const mid = f.mid, W = 2000, H = W * 352 / 402;
+
+    const parzPrimo = [], donePrimo = [], doneMinori = [];
+    for (const x of this.feats) {
+      const c = s.cov[x.id] || 0;
+      if (!c) continue;
+      if (x.req === 2) (c >= 2 ? donePrimo : parzPrimo).push({ d: x.d });
+      else doneMinori.push({ d: x.d });
+    }
+    const perStrada = {};
+    for (const x of this.feats) {
+      const o = perStrada[x.strada] || (perStrada[x.strada] = { m: 0, done: 0, resto: 0 });
+      o.m += x.m; const c = Math.min(s.cov[x.id] || 0, x.req);
+      o.done += x.m * c / x.req; if (c < x.req) o.resto += x.m;
+    }
+    const quasi = Object.entries(perStrada)
+      .map(([nome, o]) => ({ nome, pct: Math.round(o.done / o.m * 100), resto: o.resto }))
+      .filter(x => x.pct >= 55 && x.pct < 100).sort((a, b) => b.pct - a.pct).slice(0, 4)
+      .map(x => ({ nome: x.nome, pct: String(x.pct), resto: x.resto >= 1000 ? (x.resto / 1000).toFixed(1) + ' km' : x.resto + ' m' }));
+
+    const apertiGiro = this.route.filter(x => (s.cov[x.id] || 0) < x.req).length;
+
+    return {
+      rail: SCREENS.map(([id, label]) => ({
+        label, go: this.go(id),
+        bg: s.screen === id ? '#16181B' : 'transparent',
+        fg: s.screen === id ? '#fff' : '#5C6169',
+        bd: s.screen === id ? '#16181B' : '#C9C4BB',
+      })),
+      isRete: s.screen === 'rete', isGiro: s.screen === 'giro', isElemento: s.screen === 'elemento',
+      isAnomalia: s.screen === 'anomalia', isRiepilogo: s.screen === 'riepilogo',
+      toRete: this.go('rete'), toGiro: this.go('giro'), toElemento: this.go('elemento'),
+      toRiepilogo: this.go('riepilogo'), openAnomalia: this.go('anomalia'),
+
+      basePrimo: this.base.primo, baseSecondo: this.base.secondo, baseSecondaria: this.base.secondaria,
+      parzPrimo, donePrimo, doneMinori,
+      boxTot: this.fitBox,
+      boxZoom: this.box(0, mid[0], this.ey - mid[1], W, H),
+      boxElem: this.box(0, mid[0], this.ey - mid[1], 700, 700 * 170 / 370),
+      correnteD: f.d, posX: mid[0], posY: this.ey - mid[1], rBig: 90, rDot: 34,
+
+      pctTot: pctTot.toFixed(1), kmFatti: (pctTot / 100 * kmTotAll).toFixed(0), kmTot: kmTotAll.toFixed(0),
+      deltaPct: Math.max(0, pctTot - s.pctIniziale).toFixed(2),
+      livelli: Object.keys(LIV).map(k => {
+        let done = 0, tot = 0, aperti = 0;
+        for (const x of this.feats) if (x.key === k) { tot += x.m; const c = Math.min(s.cov[x.id] || 0, x.req); done += x.m * c / x.req; if (c < x.req) aperti++; }
+        return {
+          nome: LIV[k].nome, req: LIV[k].req === 2 ? '2 PASSAGGI' : '1 PASSAGGIO', tint: LIV[k].tint,
+          pct: (done / tot * 100).toFixed(0), km: (done / 1000).toFixed(1), kmTot: this.kmTot[k].toFixed(0),
+          elem: aperti + ' elementi aperti',
+        };
+      }),
+      quasi, giroNome: this.giroNome, giroResto: String(apertiGiro),
+      giroElem: String(this.route.length),
+      giroPct: String(Math.round((this.route.length - apertiGiro) / this.route.length * 100)),
+
+      corrStrada: f.strada, corrCodice: f.cod, corrM: String(f.m),
+      corrLivello: f.key === 'primo' ? '1º LIVELLO' : f.key === 'secondo' ? '2º LIVELLO' : 'SECONDARIA',
+      corrPassi: Array.from({ length: f.req }, (_, i) => ({
+        bg: i < pass ? '#E8590C' : 'transparent', bd: i < pass ? '#E8590C' : '#B9B4AC',
+      })),
+      corrStato: pass + '/' + f.req, corrColor: pass >= f.req ? '#0B7A5A' : '#E8590C',
+      corrProssimo: (pass + 1) + ' di ' + f.req,
+      corrIdStrada: f.id.split(':')[1], corrUltimo: pass ? 'oggi' : 'mai',
+      corrCoord: (this.g.origin[0] + f.mid[0]).toFixed(0) + ' E · ' + (this.g.origin[1] + f.mid[1]).toFixed(0) + ' N',
+
+      kmOggi: s.kmOggi.toFixed(2), chiusiOggi: String(s.chiusiOggi.length),
+      primiOggi: String(s.primiOggi), chiuseOggi: s.chiusiOggi.slice(-6).reverse(),
+      noChiuse: s.chiusiOggi.length === 0, noAnomalie: s.anomalie.length === 0,
+      nAnomalie: String(s.anomalie.length), anomColor: s.anomalie.length ? '#B45309' : '#16181B',
+      toast: s.toast,
+      registra: () => { this.avanza(); this.setState({ screen: 'giro' }); },
+      toggleRec: () => this.setState(x => ({ rec: !x.rec })),
+      recLabel: s.rec ? 'Pausa rilievo' : 'Avvia rilievo',
+      recBg: s.rec ? '#fff' : '#E8590C', recFg: s.rec ? '#16181B' : '#fff', recBd: s.rec ? '#16181B' : '#E8590C',
+
+      checklist: CHK.map((label, i) => ({
+        label, tick: s.chk[i] ? '✓' : '',
+        bd: s.chk[i] ? '#0B7A5A' : '#B9B4AC', bg: s.chk[i] ? '#0B7A5A' : '#fff',
+        toggle: () => this.setState(x => { const chk = x.chk.slice(); chk[i] = !chk[i]; return { chk }; }),
+      })),
+
+      tipi: TIPI.map(label => ({
+        label, pick: () => this.setState({ tipo: label }),
+        bg: s.tipo === label ? '#16181B' : '#fff', fg: s.tipo === label ? '#fff' : '#16181B',
+        bd: s.tipo === label ? '#16181B' : '#DCD9D4',
+      })),
+      gravita: GRAV.map(label => ({
+        label, pick: () => this.setState({ grav: label }),
+        bg: s.grav === label ? '#16181B' : '#fff', fg: s.grav === label ? '#fff' : '#16181B',
+      })),
+      foto: Array.from({ length: s.nFoto }, (_, i) => ({ label: 'FOTO ' + (i + 1) })),
+      addFoto: () => this.setState(x => ({ nFoto: Math.min(3, x.nFoto + 1) })),
+      note: s.note, setNote: e => this.setState({ note: e.target.value }),
+      salvaLabel: s.salvata ? 'Salvata ✓' : 'Salva anomalia',
+      salvaBg: s.salvata ? '#0B7A5A' : '#16181B',
+      salvaAnomalia: () => {
+        this.setState(x => ({
+          salvata: true,
+          anomalie: x.anomalie.concat([{ tipo: x.tipo, dove: f.strada + ' ' + f.cod, gravita: x.grav.toUpperCase(), nFoto: x.nFoto }]),
+        }));
+        setTimeout(() => this.setState({ screen: 'giro', salvata: false, note: '', nFoto: 2 }), 700);
+      },
+      anomalie: s.anomalie.map(a => ({
+        tipo: a.tipo, dove: a.dove, nFoto: String(a.nFoto), gravita: a.gravita,
+        fg: a.gravita === 'ALTA' ? '#fff' : '#B45309', bg: a.gravita === 'ALTA' ? '#B45309' : '#F6ECDD',
+      })),
+      sync: () => {
+        if (s.syncState !== 'idle') return;
+        this.setState({ syncState: 'busy' });
+        setTimeout(() => this.setState({ syncState: 'done' }), 1400);
+      },
+      syncLabel: s.syncState === 'busy' ? 'Invio in corso…' : s.syncState === 'done' ? 'Copertura aggiornata ✓' : 'Firma e invia copertura',
+      syncBg: s.syncState === 'done' ? '#0B7A5A' : s.syncState === 'busy' ? '#5C6169' : '#E8590C',
+      syncHint: s.syncState === 'done' ? 'Sincronizzato con il piano di rilievo 2026 alle 15:04' : s.chiusiOggi.length + ' elementi e ' + s.anomalie.length + ' anomalie in coda',
+    };
+  }
+}
+
+function hash(str) {
+  let h = 2166136261;
+  for (let i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 16777619); }
+  return Math.abs(h) % 100;
+}
+</script>
+</body>
+</html>

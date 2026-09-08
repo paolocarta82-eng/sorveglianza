@@ -1,0 +1,12 @@
+COPERTURA RETE - app installabile (PWA)
+
+1) Metti l'intera cartella "app" su un indirizzo https (GitHub Pages, Netlify Drop, un server aziendale).
+2) Apri l'indirizzo con Safari su iPhone.
+3) Tasto Condividi -> "Aggiungi alla schermata Home".
+4) Da quel momento parte come app: icona propria, schermo intero, nessuna barra del browser, funziona offline (grafo e cartografia sono nel pacchetto).
+
+Prova in locale su computer (senza pubblicare):
+  cd app && python3 -m http.server 8080
+  poi apri http://localhost:8080
+
+Nota: l'installazione sulla Home e il funzionamento offline richiedono https (o localhost); aprendo il file con doppio clic il service worker non si registra.
