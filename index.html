@@ -14,7 +14,11 @@
     <sc-if value="{{ isRete }}" hint-placeholder-val="{{ true }}">
       <div style="min-height:calc(100vh - 86px);background:#F7F6F4;padding:calc(env(safe-area-inset-top) + 16px) 0 40px;box-sizing:border-box">
         <div style="padding:14px 20px 16px">
-          <div style="font:500 11px/1 'IBM Plex Mono',monospace;letter-spacing:.06em;color:#5C6169">PIANO DI RILIEVO 2026 · SORVEGLIANZA TECNICA</div>
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:10px">
+            <div style="font:500 11px/1 'IBM Plex Mono',monospace;letter-spacing:.06em;color:#5C6169">SORVEGLIANZA SETTIMANALE · {{ wkLabel }}</div>
+            <button onClick="{{ azzera }}" style="all:unset;font:500 10px/1 'IBM Plex Mono',monospace;letter-spacing:.04em;color:#B45309;border:1px solid #DCD9D4;border-radius:5px;padding:6px 8px;cursor:pointer">AZZERA</button>
+          </div>
+          <div style="font:400 12px/1 'Helvetica Neue',Helvetica,Arial,sans-serif;color:#8A8F97;margin-top:6px">{{ wkPeriodo }}</div>
           <div style="display:flex;align-items:flex-end;gap:10px;margin-top:10px">
             <div style="font:600 56px/.9 'IBM Plex Mono',monospace;letter-spacing:-.04em;color:#16181B">{{ pctTot }}</div>
             <div style="font:500 20px/1 'IBM Plex Mono',monospace;color:#8A8F97;padding-bottom:5px">%</div>
@@ -184,7 +188,12 @@
             <button onClick="{{ openAnomalia }}" style="all:unset;width:112px;box-sizing:border-box;text-align:center;background:#fff;color:#16181B;border:1px solid #16181B;border-radius:10px;padding:16px 12px;font:600 14px/1 'Helvetica Neue',Helvetica,Arial,sans-serif;cursor:pointer" style-hover="background:#F0EDE7">Anomalia</button>
           </div>
           <div style="display:flex;flex-direction:column;gap:4px">
-            <button onClick="{{ toggleDemo }}" style="all:unset;display:block;text-align:center;width:100%;box-sizing:border-box;padding:8px;font:500 13px/1 'Helvetica Neue',Helvetica,Arial,sans-serif;color:#5C6169;cursor:pointer;text-decoration:underline">{{ demoLabel }}</button>
+            <div style="display:flex;align-items:center;gap:8px;padding:4px 2px">
+              <div style="width:7px;height:7px;border-radius:50%;background:{{ wakeColor }};flex:none"></div>
+              <div style="flex:1;font:400 12px/1.35 'Helvetica Neue',Helvetica,Arial,sans-serif;color:#5C6169">{{ wakeLabel }}</div>
+            </div>
+            <div style="font:400 12px/1.35 'Helvetica Neue',Helvetica,Arial,sans-serif;color:#8A8F97;padding:0 2px 4px">{{ savedLabel }}</div>
+            <button onClick="{{ esporta }}" style="all:unset;display:block;text-align:center;width:100%;box-sizing:border-box;padding:8px;font:500 13px/1 'Helvetica Neue',Helvetica,Arial,sans-serif;color:#5C6169;cursor:pointer;text-decoration:underline">Esporta copertura (CSV)</button>
             <button onClick="{{ toRiepilogo }}" style="all:unset;display:block;text-align:center;width:100%;box-sizing:border-box;padding:8px;font:500 13px/1 'Helvetica Neue',Helvetica,Arial,sans-serif;color:#5C6169;cursor:pointer;text-decoration:underline">Chiudi giro e invia copertura</button>
           </div>
         </div>
@@ -334,6 +343,7 @@
 
           <button onClick="{{ sync }}" style="all:unset;display:block;text-align:center;box-sizing:border-box;width:100%;margin-top:18px;background:{{ syncBg }};color:#fff;border-radius:10px;padding:18px;font:600 15px/1 'Helvetica Neue',Helvetica,Arial,sans-serif;cursor:pointer">{{ syncLabel }}</button>
           <div style="font:400 12px/1.45 'Helvetica Neue',Helvetica,Arial,sans-serif;color:#5C6169;text-align:center;margin-top:10px">{{ syncHint }}</div>
+          <button onClick="{{ azzera }}" style="all:unset;display:block;text-align:center;box-sizing:border-box;width:100%;margin-top:16px;background:#fff;color:#B45309;border:1px solid #B45309;border-radius:10px;padding:15px;font:600 14px/1 'Helvetica Neue',Helvetica,Arial,sans-serif;cursor:pointer">Chiudi la settimana e azzera la copertura</button>
         </div>
       </div>
     </sc-if>
@@ -359,7 +369,7 @@ const LIV = {
 
 class Component extends DCLogic {
   state = {
-    screen: 'rete', ready: false, rec: false, demo: false, tick: 0,
+    screen: 'rete', ready: false, rec: false, wakeOn: false, wk: '', savedAt: 0,
     gpsAcc: null, gpsKmh: null, gpsPos: null, gpsErr: '', match: null, frazione: 0,
     cov: {}, idx: 0, kmOggi: 0, chiusiOggi: [], primiOggi: 0, pctIniziale: 0,
     chk: [true, true, false, false], toast: '',
@@ -405,9 +415,6 @@ const xs = [], ys = [];
       this.kmTot = {}; this.nElem = {};
       for (const [k, L] of Object.entries(g.layers)) { this.kmTot[k] = L.km; this.nElem[k] = L.n; }
 
-      // il piano parte vuoto: nessun elemento rilevato
-      const cov = {};
-      for (const f of this.feats) cov[f.id] = 0;
       this.bins = {}; this.cum = {};
       for (const f of this.feats) {
         const c = [0];
@@ -440,15 +447,96 @@ const xs = [], ys = [];
         .sort((a, b) => Math.hypot(a.mid[0] - c[0], a.mid[1] - c[1]) - Math.hypot(b.mid[0] - c[0], b.mid[1] - c[1]))
         .slice(0, 14);
       this.giroNome = nome; this.route = main.concat(vicine);
-      this.setState({ ready: true, cov, pctIniziale: 0 });
+
+      const wk = this.wk = weekKey(new Date());
+      const cov = {};
+      for (const f of this.feats) cov[f.id] = 0;
+      let km = 0, chiusi = [], primi = 0, anom = [];
+      try {
+        const raw = localStorage.getItem('sorv:v1:' + wk);
+        if (raw) {
+          const d = JSON.parse(raw);
+          for (const k in (d.cov || {})) if (cov[k] !== undefined) cov[k] = d.cov[k];
+          for (const id in (d.bins || {})) if (this.bins[id]) for (const i of d.bins[id]) if (i < this.bins[id].length) this.bins[id][i] = 1;
+          km = d.km || 0; chiusi = d.chiusi || []; primi = d.primi || 0; anom = d.anom || [];
+        }
+      } catch (e) {}
+      this.setState({ ready: true, wk, cov, kmOggi: km, chiusiOggi: chiusi, primiOggi: primi, anomalie: anom, pctIniziale: this.pct(cov) });
+      if (localStorage.getItem('sorv:rec') === '1') this.gps(true);
     });
-    this.timer = setInterval(() => {
-      if (this.state.demo && this.state.ready) this.avanza();
-    }, 1500);
+    this.onVis = () => {
+      if (document.visibilityState === 'visible') { if (this.state.rec) { this.wake(); this.gps(true); } }
+      else this.saveNow();
+    };
+    document.addEventListener('visibilitychange', this.onVis);
+    this.onLeave = () => this.saveNow();
+    addEventListener('pagehide', this.onLeave);
+    this.timer = setInterval(() => { if (this.state.rec) this.saveNow(); }, 20000);
   }
   componentWillUnmount() {
-    clearInterval(this.timer); clearTimeout(this.tt);
+    clearInterval(this.timer); clearTimeout(this.tt); clearTimeout(this.st);
+    document.removeEventListener('visibilitychange', this.onVis);
+    removeEventListener('pagehide', this.onLeave);
     if (this.watch != null) navigator.geolocation.clearWatch(this.watch);
+    if (this.wl) { try { this.wl.release(); } catch (e) {} }
+  }
+
+  save() { clearTimeout(this.st); this.st = setTimeout(() => this.saveNow(), 1500); }
+  saveNow() {
+    const s = this.state;
+    if (!s.ready || !this.wk) return;
+    const cov = {};
+    for (const k in s.cov) if (s.cov[k]) cov[k] = s.cov[k];
+    const bins = {};
+    for (const id in this.bins) {
+      const b = this.bins[id], on = [];
+      for (let i = 0; i < b.length; i++) if (b[i]) on.push(i);
+      if (on.length) bins[id] = on;
+    }
+    try {
+      localStorage.setItem('sorv:v1:' + this.wk, JSON.stringify({ cov, bins, km: s.kmOggi, chiusi: s.chiusiOggi, primi: s.primiOggi, anom: s.anomalie, ts: Date.now() }));
+      this.setState({ savedAt: Date.now() });
+    } catch (e) {}
+  }
+  async wake() {
+    if (!('wakeLock' in navigator) || this.wl) return;
+    try {
+      this.wl = await navigator.wakeLock.request('screen');
+      this.setState({ wakeOn: true });
+      this.wl.addEventListener('release', () => { this.wl = null; this.setState({ wakeOn: false }); });
+    } catch (e) { this.setState({ wakeOn: false }); }
+  }
+  azzeraSettimana() {
+    if (!confirm('Azzerare la copertura della settimana ' + this.wk + '? Una copia resta nell\u2019archivio locale.')) return;
+    try {
+      const raw = localStorage.getItem('sorv:v1:' + this.wk);
+      if (raw) localStorage.setItem('sorv:arch:' + this.wk + ':' + Date.now(), raw);
+      localStorage.removeItem('sorv:v1:' + this.wk);
+    } catch (e) {}
+    const cov = {};
+    for (const f of this.feats) { cov[f.id] = 0; this.bins[f.id] = new Uint8Array(this.bins[f.id].length); }
+    this.setState({ cov, kmOggi: 0, chiusiOggi: [], primiOggi: 0, anomalie: [], pctIniziale: 0, syncState: 'idle', screen: 'rete', toast: '' });
+  }
+  scarica(nome, testo) {
+    const b = new Blob(['\ufeff' + testo], { type: 'text/csv;charset=utf-8' });
+    const u = URL.createObjectURL(b), a = document.createElement('a');
+    a.href = u; a.download = nome; document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(u), 4000);
+  }
+  esportaCopertura() {
+    const s = this.state;
+    const r = [['settimana', 'id_elemento', 'livello', 'strada', 'codice', 'lunghezza_m', 'passaggi', 'richiesti', 'stato'].join(';')];
+    for (const f of this.feats) {
+      const c = Math.min(s.cov[f.id] || 0, f.req);
+      r.push([this.wk, f.id.split(':')[1], f.key, '"' + f.strada.replace(/"/g, "'") + '"', f.cod, f.m, c, f.req,
+        c >= f.req ? 'sorvegliato' : c > 0 ? 'parziale' : 'da rilevare'].join(';'));
+    }
+    this.scarica('copertura_' + this.wk + '.csv', r.join('\n'));
+  }
+  esportaAnomalie() {
+    const r = [['settimana', 'tipologia', 'gravita', 'elemento', 'n_foto'].join(';')];
+    for (const a of this.state.anomalie) r.push([this.wk, a.tipo, a.gravita, '"' + a.dove.replace(/"/g, "'") + '"', a.nFoto].join(';'));
+    this.scarica('anomalie_' + this.wk + '.csv', r.join('\n'));
   }
 
   pct(cov) {
@@ -475,6 +563,7 @@ const xs = [], ys = [];
     });
     clearTimeout(this.tt);
     this.tt = setTimeout(() => this.setState({ toast: '' }), 2200);
+    this.save();
   }
   // WGS84 -> UTM 32N (metri), lo stesso sistema del grafo
   proj(lon, lat) {
@@ -526,10 +615,10 @@ const xs = [], ys = [];
     const m = this.matchAt(px, py);
     let dKm = 0;
     if (this.last) dKm = Math.hypot(px - this.last[0], py - this.last[1]) / 1000;
-    if (dKm > 0.2) dKm = 0; // salto di segnale
+    if (dKm > 0.2 || acc > 60) dKm = 0; // salto di segnale o fix inaffidabile
     this.last = [px, py];
 
-    const agganciato = m && m.dist <= tol + Math.min(acc, 20);
+    const agganciato = m && acc <= 60 && m.dist <= tol + Math.min(acc, 20);
     let frazione = 0, chiuso = null, nuovo = null;
     let cov = this.state.cov;
     if (agganciato) {
@@ -557,17 +646,24 @@ const xs = [], ys = [];
       toast: chiuso ? 'Elemento chiuso · ' + chiuso.cod + ' · ' + chiuso.strada
         : nuovo ? 'Primo passaggio validato · manca il secondo' : s.toast,
     }));
-    if (chiuso || nuovo) { clearTimeout(this.tt); this.tt = setTimeout(() => this.setState({ toast: '' }), 2600); }
+    if (chiuso || nuovo) { clearTimeout(this.tt); this.tt = setTimeout(() => this.setState({ toast: '' }), 2600); this.saveNow(); }
+    else if (agganciato) this.save();
   }
   gps(on) {
     if (!on) {
       if (this.watch != null) navigator.geolocation.clearWatch(this.watch);
       this.watch = null; this.last = null;
-      this.setState({ rec: false, gpsErr: '' });
+      try { localStorage.setItem('sorv:rec', '0'); } catch (e) {}
+      if (this.wl) { try { this.wl.release(); } catch (e) {} this.wl = null; }
+      this.saveNow();
+      this.setState({ rec: false, wakeOn: false, gpsErr: '' });
       return;
     }
     if (!navigator.geolocation) { this.setState({ gpsErr: 'Questo dispositivo non fornisce la posizione' }); return; }
+    try { localStorage.setItem('sorv:rec', '1'); } catch (e) {}
     this.setState({ rec: true, gpsErr: '' });
+    this.wake();
+    if (this.watch != null) navigator.geolocation.clearWatch(this.watch);
     this.watch = navigator.geolocation.watchPosition(
       p => this.onFix(p),
       e => this.setState({ gpsErr: e.code === 1 ? 'Permesso posizione negato' : 'Segnale GPS non disponibile' }),
@@ -654,7 +750,7 @@ const xs = [], ys = [];
         ? (this.g.origin[0] + s.gpsPos[0]).toFixed(0) + ' E · ' + (this.g.origin[1] + s.gpsPos[1]).toFixed(0) + ' N (UTM 32N)'
         : 'posizione non disponibile · GPS ' + (s.rec ? 'in ricerca' : 'non attivo'),
       fixColor: s.gpsPos ? '#16181B' : '#B45309',
-      kmLabel: s.demo ? 'KM SIMULATI' : 'KM OGGI',
+      kmLabel: 'KM SETTIMANA',
 
       kmOggi: s.kmOggi.toFixed(2), chiusiOggi: String(s.chiusiOggi.length),
       primiOggi: String(s.primiOggi), chiuseOggi: s.chiusiOggi.slice(-6).reverse(),
@@ -663,8 +759,15 @@ const xs = [], ys = [];
       toast: s.toast,
       registra: () => { this.avanza(); this.setState({ screen: 'giro' }); },
       toggleRec: () => this.gps(!s.rec),
-      toggleDemo: () => this.setState(x => ({ demo: !x.demo })),
-      demoLabel: s.demo ? 'Ferma simulazione' : 'Simula percorso (prova senza GPS)',
+      wkLabel: this.wk, wkPeriodo: weekPeriodo(this.wk),
+      esporta: () => this.esportaCopertura(),
+      azzera: () => this.azzeraSettimana(),
+      wakeLabel: s.wakeOn ? 'Schermo tenuto acceso dall\u2019app'
+        : s.rec ? 'Tieni l\u2019app in primo piano e il telefono alimentato' : 'Rilievo in pausa',
+      wakeColor: s.wakeOn ? '#0B7A5A' : '#5C6169',
+      savedLabel: s.savedAt
+        ? 'Rilievo salvato sul telefono alle ' + new Date(s.savedAt).toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' })
+        : 'Il rilievo si salva sul telefono a ogni passaggio',
       gpsStato: s.gpsErr ? s.gpsErr : !s.rec ? 'GPS non attivo' : s.gpsAcc == null ? 'Ricerca satelliti…' : 'Posizione attiva',
       gpsColor: s.gpsErr ? '#B45309' : s.rec && s.gpsAcc != null ? '#0B7A5A' : '#5C6169',
       gpsAcc: s.gpsAcc == null ? '—' : '±' + s.gpsAcc.toFixed(0) + ' m',
@@ -707,17 +810,33 @@ const xs = [], ys = [];
         fg: a.gravita === 'ALTA' ? '#fff' : '#B45309', bg: a.gravita === 'ALTA' ? '#B45309' : '#F6ECDD',
       })),
       sync: () => {
-        if (s.syncState !== 'idle') return;
-        this.setState({ syncState: 'busy' });
-        setTimeout(() => this.setState({ syncState: 'done' }), 1400);
+        this.esportaCopertura();
+        if (s.anomalie.length) setTimeout(() => this.esportaAnomalie(), 600);
+        this.setState({ syncState: 'done' });
       },
-      syncLabel: s.syncState === 'busy' ? 'Invio in corso…' : s.syncState === 'done' ? 'Copertura aggiornata ✓' : 'Firma e invia copertura',
-      syncBg: s.syncState === 'done' ? '#0B7A5A' : s.syncState === 'busy' ? '#5C6169' : '#E8590C',
-      syncHint: s.syncState === 'done' ? 'Sincronizzato con il piano di rilievo 2026 alle 15:04' : s.chiusiOggi.length + ' elementi e ' + s.anomalie.length + ' anomalie in coda',
+      syncLabel: s.syncState === 'done' ? 'CSV esportati ✓ · esporta di nuovo' : 'Esporta copertura e anomalie (CSV)',
+      syncBg: s.syncState === 'done' ? '#0B7A5A' : '#E8590C',
+      syncHint: 'Un file per la copertura dei 2.706 elementi, uno per le ' + s.anomalie.length + ' anomalie della settimana ' + this.wk,
     };
   }
 }
 
+function weekKey(d) {
+  const t = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+  const day = t.getUTCDay() || 7;
+  t.setUTCDate(t.getUTCDate() + 4 - day);
+  const y0 = new Date(Date.UTC(t.getUTCFullYear(), 0, 1));
+  const n = Math.ceil(((t - y0) / 86400000 + 1) / 7);
+  return t.getUTCFullYear() + '-W' + String(n).padStart(2, '0');
+}
+function weekPeriodo(wk) {
+  const [y, w] = wk.split('-W').map(Number);
+  const g = new Date(Date.UTC(y, 0, 4));
+  const lun = new Date(g); lun.setUTCDate(g.getUTCDate() - ((g.getUTCDay() || 7) - 1) + (w - 1) * 7);
+  const dom = new Date(lun); dom.setUTCDate(lun.getUTCDate() + 6);
+  const f = d => d.getUTCDate() + ' ' + ['gen','feb','mar','apr','mag','giu','lug','ago','set','ott','nov','dic'][d.getUTCMonth()];
+  return 'dal ' + f(lun) + ' al ' + f(dom);
+}
 function hash(str) {
   let h = 2166136261;
   for (let i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 16777619); }
